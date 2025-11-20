@@ -1,10 +1,24 @@
 import { Request, Response } from "express";
 
-export type Book = {
-    id: string;
-    title: string;
-    date?: string; // optional
-}
+import { z } from 'zod';
+
+export const BookSchema = z.object({
+    id: z.string().min(1, { message: "Book ID is required" }),
+    title: z.string().min(1, { message: "Book title is required" }),
+    date: z.string().optional()
+});
+
+export type Book = z.infer<typeof BookSchema>; // typeScript type from zod schema
+
+// DTD - Data Transfer Object
+export const CreateBookDTO = BookSchema.omit({ date: true }); // what client sends to server
+export type CreateBookDTOType = z.infer<typeof CreateBookDTO>;
+
+// export type Book = {
+//     id: string;
+//     title: string;
+//     date?: string; // optional
+// }
 
 export const books: Book[] = [
     { id: 'B-1', title: '1984' },
