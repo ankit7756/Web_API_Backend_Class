@@ -27,14 +27,21 @@ export const books: Book[] = [
 
 export class BookController {
     createBook = (req: Request, res: Response) => {
-        const { id, title } = req.body; // destructuring
-        // const id = req.body.id;
-        if (id) {
-            return res.status(400).json({ message: "Book ID is required" });
+        const validation = CreateBookDTO.safeParse(req.body);
+        if (!validation.success) {
+            return res.status(400).json({ errors: validation.error });
         }
-        if (title) {
-            return res.status(400).json({ message: "Book title is required" });
-        }
+        const { id, title } = validation.data;
+
+        // const { id, title } = req.body; // destructuring
+        // // const id = req.body.id;
+        // if (id) {
+        //     return res.status(400).json({ message: "Book ID is required" });
+        // }
+        // if (title) {
+        //     return res.status(400).json({ message: "Book title is required" });
+        // }
+
         const checkBook = books.find(book => book.id === id);
         if (checkBook) {
             return res.status(409).json({ message: "Book with this ID already exists" });
