@@ -1,8 +1,18 @@
 import express, { Application, Request, Response } from 'express';
 import bodyParser from 'body-parser';
+import { connectDatabase } from './database/mongodb';
+import { PORT } from './config';
+
+import dotenv from 'dotenv';
+dotenv.config();
+
+// can use .env variables below this
+console.log(process.env.PORT)
+
+import bookRoutes from './routes/book.route';
 
 const app: Application = express();
-const PORT: number = 3000;
+// const PORT: number = 3000;
 
 app.use(bodyParser.json());
 
@@ -19,6 +29,10 @@ app.get('/add', (req: Request, res: Response) => {
 });
 
 
-app.listen(PORT, () => {
-    console.log(`Server is running at http://localhost:${PORT}`);
-});
+async function startServer() {
+    app.listen(PORT, () => {
+        console.log(`Server is running at http://localhost:${PORT}`);
+    });
+}
+
+startServer();
